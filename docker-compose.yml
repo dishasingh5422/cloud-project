@@ -1,4 +1,19 @@
 services:
+  app:
+    build:
+      context: ./app
+
+    container_name: cloud-api
+
+    ports:
+      - "3000:3000"
+
+    environment:
+      PORT: 3000
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/cloudapp
+
+    depends_on:
+      - postgres
   postgres:
     image: postgres:16
     container_name: cloud-postgres
