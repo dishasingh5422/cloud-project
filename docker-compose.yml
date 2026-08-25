@@ -1,0 +1,18 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: cloud-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: cloudapp
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./app/src/sql/init.sql:/docker-entrypoint-initdb.d/001-init.sql:ro
+
+
+volumes:
+  postgres_data:
