@@ -1,3 +1,4 @@
+import { uploadText, listObjects } from "./storage";
 import express, { Request, Response, NextFunction } from "express";
 import pool from "./db";
 
@@ -196,6 +197,54 @@ app.delete("/api/tasks/:id", async (req, res) => {
 
     res.status(500).json({
       error: "Failed to delete task",
+    });
+  }
+});
+
+app.post("/api/uploads", async (req, res) => {
+  try {
+    const { key, content } = req.body;
+
+    if (
+      typeof key !== "string" ||
+      key.trim().length === 0
+    ) {
+      return res.status(400).json({
+        error: "Key is required",
+      });
+    }
+
+    if (typeof content !== "string") {
+      return res.status(400).json({
+        error: "Content must be a string",
+      });
+    }
+
+    await uploadText(key.trim(), content);
+
+    res.status(201).json({
+      message: "File uploaded successfully",
+      key: key.trim(),
+    });
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      error: "Failed to upload file",
+    });
+  }
+});
+
+app.get("/api/uploads", async (_req, res) => {
+  try {
+    const objects = await listObjects();
+
+    res.json(objects);
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      error: "Failed to list files",
     });
   }
 });

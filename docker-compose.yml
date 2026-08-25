@@ -1,8 +1,26 @@
 services:
-  app:
-    build:
-      context: ./app
 
+  postgres:
+    image: postgres:16
+    container_name: cloud-postgres
+
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: cloudapp
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./app/src/sql/init.sql:/docker-entrypoint-initdb.d/001-init.sql:ro
+
+
+  app:
+    build: ./app
     container_name: cloud-api
 
     ports:
@@ -12,21 +30,23 @@ services:
       PORT: 3000
       DATABASE_URL: postgresql://postgres:postgres@postgres:5432/cloudapp
 
+      AWS_REGION: us-east-1
+      AWS_ACCESS_KEY_ID: test
+      AWS_SECRET_ACCESS_KEY: test
+      AWS_ENDPOINT_URL: http://floci:4566
+      S3_BUCKET: cloud-project-uploads
+
     depends_on:
       - postgres
-  postgres:
-    image: postgres:16
-    container_name: cloud-postgres
-    restart: unless-stopped
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: cloudapp
+      - floci
+
+
+  floci:
+    image: floci/floci:latest
+    container_name: cloud-floci
+
     ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-      - ./app/src/sql/init.sql:/docker-entrypoint-initdb.d/001-init.sql:ro
+      - "4566:4566"
 
 
 volumes:
