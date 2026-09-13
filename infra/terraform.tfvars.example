@@ -1,0 +1,13 @@
+# This file is safe to commit. Copy it to terraform.tfvars only when preparing
+# a deliberately approved real-AWS plan. Do not add credentials to either file.
+
+project_name = "cloud-project"
+environment  = "dev"
+aws_region   = "us-east-1"
+
+availability_zones = ["us-east-1a", "us-east-1b"]
+
+vpc_cidr                 = "10.0.0.0/16"
+public_subnet_cidrs      = ["10.0.1.0/24", "10.0.2.0/24"]
+private_app_subnet_cidrs = ["10.0.11.0/24", "10.0.12.0/24"]
+database_subnet_cidrs    = ["10.0.21.0/24", "10.0.22.0/24"]

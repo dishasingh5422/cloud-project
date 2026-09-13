@@ -2,3 +2,11 @@ app/.env
 node_modules/
 dist/
 .envs
+
+# Terraform working files and state can contain infrastructure metadata or secrets.
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+*.tfvars
+!*.tfvars.example
+crash.log
