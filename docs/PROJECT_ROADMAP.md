@@ -17,7 +17,7 @@ The project will stand out through operating discipline and evidence, rather tha
 | Data | Complete locally | PostgreSQL is initialised with `tasks` and persists through the Compose volume. |
 | Object storage | Complete locally | The AWS JavaScript SDK uploads text and lists objects through Floci's S3-compatible endpoint. |
 | Containers | Complete locally | Compose orchestrates API, PostgreSQL, and Floci; the API has a Dockerfile. |
-| Basic robustness | Partially complete | Request validation and HTTP 400/404/500 responses exist, but there is no automated regression suite yet. |
+| Basic robustness | Complete locally | Request validation and HTTP 400/404/500 responses exist, along with a repeatable smoke suite for the documented local API and Floci flows. |
 | Infrastructure | Not started | Terraform root and VPC module files exist but are empty. |
 | Deployment / operations | Not started | No AWS sandbox deployment, CI/CD, dashboard, alarm, or incident exercise yet. |
 
@@ -79,8 +79,8 @@ Floci remains limited to AWS API-oriented local tests. It is not evidence that V
 
 ## Current priority order
 
-1. Add repeatable local smoke tests.
-2. Implement the VPC module and validate it locally — today's main infrastructure task.
+1. Run and commit the repeatable local smoke suite.
+2. Implement the VPC module and validate it locally — the next infrastructure task.
 3. Add security groups, then ALB/EC2/RDS.
 4. Add CI before allowing automated deployment.
 5. Deploy to a cost-controlled AWS sandbox and capture operational evidence.

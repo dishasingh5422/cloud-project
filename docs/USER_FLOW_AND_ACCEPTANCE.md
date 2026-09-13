@@ -44,24 +44,25 @@ The developer should be able to reproduce the behaviour without an AWS account. 
 
 ## Core verification checklist
 
-Run this checklist before adding AWS infrastructure and later as CI smoke tests.
+Run the repeatable local smoke suite before adding AWS infrastructure and later as a CI smoke-test job:
 
 ```bash
-docker compose up --build -d
-curl --fail http://localhost:3000/health
-curl --fail http://localhost:3000/db-health
+npm run test:smoke
 ```
 
-Then verify each positive and negative case:
+It starts (or reuses) the Compose stack, waits for the API and database readiness checks, and verifies task create/list/read/update/delete, validation responses, missing-record handling, and the Floci-backed upload/list flow.
 
-- Create, list, retrieve, update, and delete a task.
-- Confirm blank task title, invalid IDs, and unknown task IDs return the documented 400/404 responses.
-- Upload a text object and ensure it appears in `GET /api/uploads`.
-- Restart Compose without `-v` and confirm an earlier task persists.
+The PostgreSQL persistence check remains deliberately separate because the smoke suite must not stop containers or delete volumes:
+
+```bash
+docker compose down
+docker compose up -d
+curl http://localhost:3000/api/tasks
+```
 
 ## Known gaps to resolve at the appropriate stage
 
-- The checks above are currently manual. Replace them with automated smoke/integration tests before CI is treated as a release gate.
+- The smoke suite is local-only until the GitHub Actions baseline is added. CI will run the same command rather than maintaining a separate test path.
 - Compose uses start order rather than health-gated dependency readiness. Add service health checks during polish.
 - The upload endpoint stores text supplied as JSON; real multipart file upload and download are optional product features, not needed for the cloud architecture MVP.
 - No frontend currently exists; loading, empty, and responsive UI states therefore do not apply yet. If a frontend is added, it must add a real demonstration purpose rather than distract from the platform scope.

@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "test:smoke": "bash tests/smoke.sh"
+  },
   "dependencies": {
     "dotenv": "^17.4.2"
   }

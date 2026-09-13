@@ -287,6 +287,16 @@ cd app
 npm run typecheck
 ```
 
+## Automated Smoke Tests
+
+Run the complete local API smoke-test flow from the project root:
+
+```bash
+npm run test:smoke
+```
+
+The command starts (or reuses) Docker Compose, waits for the API and database health checks, and verifies task CRUD, validation responses, and the Floci-backed S3 upload/list flow. It leaves the containers running and does not remove the PostgreSQL volume.
+
 ## Project Structure
 
 ```text
